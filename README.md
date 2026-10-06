@@ -52,10 +52,10 @@ kiek kuro reikės kelionei ir kiek ji kainuos.
 | Snackbar | `FuelCalcApp.kt` (`SnackbarHost`), kviečiamas skaičiuojant ir trinant |
 | 3 puslapiai + Bottom Navigation (NavigationBar + NavHost) | `FuelCalcApp.kt` |
 | Istorija su LazyColumn ir trynimu | `HistoryScreen.kt` |
-| TopAppBar su trijų taškų meniu (DropdownMenu) ir AlertDialog „Autorius“ | `FuelCalcApp.kt` |
+| TopAppBar (CenterAlignedTopAppBar) su trijų taškų meniu (DropdownMenu) ir AlertDialog „Autorius“ | `FuelCalcApp.kt` |
 | Autoriaus informacija „Apie“ puslapyje | `AboutScreen.kt` |
 | Animacija | `AnimatedVisibility` rezultato kortelei (`CalculatorScreen.kt`), `animateItem()` istorijos sąraše |
-| Material 3 tema (spalvos, šviesus/tamsus režimas) | `ui/theme/Theme.kt` |
+| Material 3 tema (spalvos, tipografija, formos, šviesus/tamsus režimas) | `ui/theme/Theme.kt` |
 | Kintami ekrano dydžiai | `MainActivity.kt` (`calculateWindowSizeClass`) → `CalculatorScreen.kt`: telefone elementai vienas po kito, plačiame ekrane (planšetė / horizontaliai) – įvestis kairėje, rezultatas dešinėje |
 | Prieinamumas | `contentDescription` ikonoms, `selectable(role = Role.RadioButton)` kuro tipo pasirinkimui |
 | Unit testai | `app/src/test/.../FuelCalculatorTest.kt` |
@@ -84,7 +84,7 @@ app/src/main/java/com/example/fuelcalc/
 ├── AboutScreen.kt         – „Apie“ puslapis
 ├── FuelCalculator.kt      – skaičiavimo ir tikrinimo logika, autoriaus duomenys
 ├── FuelViewModel.kt       – ekrano būsena ir istorija
-└── ui/theme/Theme.kt      – Material 3 spalvos
+└── ui/theme/Theme.kt      – Material 3 spalvos, tipografija ir formos
 app/src/test/java/com/example/fuelcalc/FuelCalculatorTest.kt – unit testai
 ```
 
