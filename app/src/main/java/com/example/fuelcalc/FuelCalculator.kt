@@ -1,83 +1,83 @@
 package com.example.fuelcalc
 
 // Autoriaus informacija (rodoma meniu "Autorius" ir puslapyje "Apie")
-const val AUTORIAUS_VARDAS = "Arnas Povilionis"
-const val AUTORIAUS_GRUPE = "MKDF23/2"
+const val AUTHOR_NAME = "Arnas Povilionis"
+const val AUTHOR_GROUP = "MKDF23/2"
 
 // Kuro tipai ir jų pavadinimai ekrane
-enum class KuroTipas(val pavadinimas: String) {
-    BENZINAS("Benzinas"),
-    DYZELINAS("Dyzelinas")
+enum class FuelType(val label: String) {
+    PETROL("Benzinas"),
+    DIESEL("Dyzelinas")
 }
 
 // Skaičiavimo rezultatas: visi duomenys, kurie rodomi ekrane ir istorijoje
-data class KelionesRezultatas(
-    val kuroTipas: KuroTipas,        // kuro tipas
-    val visasAtstumasKm: Double,     // visas atstumas (km)
-    val pirmynIrAtgal: Boolean,      // ar pirmyn ir atgal
-    val litrai: Double,              // kiek kuro reikės (l)
-    val bendraKaina: Double,         // bendra kaina (€)
-    val keleiviai: Int,              // keleivių skaičius
-    val kainaVienam: Double          // kaina vienam žmogui (€)
+data class TripResult(
+    val fuelType: FuelType,         // kuro tipas
+    val totalDistanceKm: Double,    // visas atstumas (km)
+    val roundTrip: Boolean,         // ar pirmyn ir atgal
+    val liters: Double,             // kiek kuro reikės (l)
+    val totalCost: Double,          // bendra kaina (€)
+    val passengers: Int,            // keleivių skaičius
+    val costPerPerson: Double       // kaina vienam žmogui (€)
 )
 
 // Skaičiavimo ir įvesties tikrinimo logika
-object KuroSkaiciuokle {
+object FuelCalculator {
 
     // Didžiausios leistinos reikšmės laukams
-    const val MAX_ATSTUMAS = 20000
-    const val MAX_SANAUDOS = 50
-    const val MAX_KAINA = 10
+    const val MAX_DISTANCE = 20000
+    const val MAX_CONSUMPTION = 50
+    const val MAX_PRICE = 10
 
     /**
      * Apskaičiuoja kelionės kuro kiekį ir kainą.
      * Kuras (l) = atstumas * sąnaudos / 100, kaina = kuras * kuro kaina.
      */
-    fun apskaiciuoti(
-        atstumasKm: Double,
-        sanaudos100Km: Double,
-        litroKaina: Double,
-        pirmynIrAtgal: Boolean,
-        keleiviai: Int,
-        kuroTipas: KuroTipas
-    ): KelionesRezultatas {
+    fun calculate(
+        distanceKm: Double,
+        consumptionPer100Km: Double,
+        pricePerLiter: Double,
+        roundTrip: Boolean,
+        passengers: Int,
+        fuelType: FuelType
+    ): TripResult {
         // Keleivių turi būti nuo 1 iki 5
-        require(keleiviai in 1..5) { "Keleivių skaičius turi būti nuo 1 iki 5" }
+        require(passengers in 1..5) { "Keleivių skaičius turi būti nuo 1 iki 5" }
         // Jei pirmyn ir atgal – atstumas padvigubinamas
-        val visasAtstumas = if (pirmynIrAtgal) atstumasKm * 2 else atstumasKm
+        val totalDistance = if (roundTrip) distanceKm * 2 else distanceKm
         // Kuras (l) = atstumas × sąnaudos / 100
-        val litrai = visasAtstumas * sanaudos100Km / 100
+        val liters = totalDistance * consumptionPer100Km / 100
         // Kaina (€) = kuras × kuro kaina
-        val bendraKaina = litrai * litroKaina
+        val totalCost = liters * pricePerLiter
         // Grąžina visus rezultatus kartu
-        return KelionesRezultatas(
-            kuroTipas = kuroTipas,
-            visasAtstumasKm = visasAtstumas,
-            pirmynIrAtgal = pirmynIrAtgal,
-            litrai = litrai,
-            bendraKaina = bendraKaina,
-            keleiviai = keleiviai,
+        return TripResult(
+            fuelType = fuelType,
+            totalDistanceKm = totalDistance,
+            roundTrip = roundTrip,
+            liters = liters,
+            totalCost = totalCost,
+            passengers = passengers,
             // Kaina vienam žmogui = kaina / keleivių skaičius
-            kainaVienam = bendraKaina / keleiviai
+            costPerPerson = totalCost / passengers
         )
     }
 
-    /** Paverčia tekstą skaičiumi; tinka ir taškas, ir kablelis (pvz. 6,5). */
-    fun paversti(ivestis: String): Double? = ivestis.trim().replace(',', '.').toDoubleOrNull()
+    /** Leidžia įvesti skaičių ir su tašku, ir su kableliu (pvz. 6,5). */
+    fun parse(input: String): Double? = input.trim().replace(',', '.').toDoubleOrNull()
 
     /** Grąžina klaidos tekstą arba null, jei įvestis teisinga. */
-    fun patikrinti(ivestis: String, maksimumas: Int): String? {
-        val reiksme = paversti(ivestis)
+    fun validate(input: String, max: Int): String? {
+        val value = parse(input)
         // Tikrina iš eilės; grąžina pirmą rastą klaidą
         return when {
             // Tuščias laukas
-            ivestis.isBlank() -> "Laukas negali būti tuščias"
+            input.isBlank() -> "Laukas negali būti tuščias"
             // Ne skaičius (pvz. raidės)
-            reiksme == null || !reiksme.isFinite() -> "Įveskite skaičių"
+            value == null || !value.isFinite() -> "Įveskite skaičių"
             // Nulis arba neigiamas
-            reiksme <= 0 -> "Reikšmė turi būti didesnė už 0"
+            value <= 0 -> "Reikšmė turi būti didesnė už 0"
             // Per didelis
-            reiksme > maksimumas -> "Reikšmė per didelė (daugiausia $maksimumas)"
+            value > max -> "Reikšmė per didelė (daugiausia $max)"
             // Viskas gerai – klaidos nėra
             else -> null
         }
@@ -85,4 +85,4 @@ object KuroSkaiciuokle {
 }
 
 // Suapvalina skaičių iki 2 skaitmenų po kablelio (pvz. 10.4 → 10,40)
-fun Double.formatuoti2(): String = "%.2f".format(this)
+fun Double.format2(): String = "%.2f".format(this)

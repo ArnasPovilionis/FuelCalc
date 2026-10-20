@@ -9,134 +9,134 @@ import androidx.lifecycle.ViewModel
 import kotlin.math.roundToInt
 
 // Vienas istorijos įrašas: unikalus numeris ir rezultatas
-data class IstorijosIrasas(val id: Int, val rezultatas: KelionesRezultatas)
+data class HistoryEntry(val id: Int, val result: TripResult)
 
 // Visi ekrano duomenys ir veiksmai su jais (saugomi atmintyje, kol programėlė veikia)
-class KuroViewModel : ViewModel() {
+class FuelViewModel : ViewModel() {
 
     // Įvesti laukai (tekstas)
-    var atstumas by mutableStateOf("")
+    var distance by mutableStateOf("")
         private set
-    var sanaudos by mutableStateOf("")
+    var consumption by mutableStateOf("")
         private set
-    var kaina by mutableStateOf("")
+    var price by mutableStateOf("")
         private set
 
     // Klaidų tekstai laukams (null – klaidos nėra)
-    var atstumoKlaida by mutableStateOf<String?>(null)
+    var distanceError by mutableStateOf<String?>(null)
         private set
-    var sanaudosKlaida by mutableStateOf<String?>(null)
+    var consumptionError by mutableStateOf<String?>(null)
         private set
-    var kainosKlaida by mutableStateOf<String?>(null)
+    var priceError by mutableStateOf<String?>(null)
         private set
 
     // Pasirinktas kuro tipas
-    var kuroTipas by mutableStateOf(KuroTipas.BENZINAS)
+    var fuelType by mutableStateOf(FuelType.PETROL)
         private set
     // Ar kelionė pirmyn ir atgal
-    var pirmynIrAtgal by mutableStateOf(false)
+    var roundTrip by mutableStateOf(false)
         private set
     // Slankiklio reikšmė (1.0–5.0)
-    var keleiviuSlankiklis by mutableFloatStateOf(1f)
+    var passengersSlider by mutableFloatStateOf(1f)
         private set
     // Keleivių skaičius sveikuoju skaičiumi
-    val keleiviai: Int get() = keleiviuSlankiklis.roundToInt()
+    val passengers: Int get() = passengersSlider.roundToInt()
 
     // Paskutinis rezultatas (null – nerodomas)
-    var rezultatas by mutableStateOf<KelionesRezultatas?>(null)
+    var result by mutableStateOf<TripResult?>(null)
         private set
 
     // Istorijos sąrašas
-    val istorija = mutableStateListOf<IstorijosIrasas>()
+    val history = mutableStateListOf<HistoryEntry>()
     // Kito įrašo numeris
-    private var kitasId = 0
+    private var nextId = 0
 
     // Pakeitus bet kurią įvestį, senas rezultatas paslepiamas (jis jau nebeatitinka duomenų)
 
     // Pakeistas atstumas
-    fun keistiAtstuma(reiksme: String) {
-        atstumas = reiksme
-        atstumoKlaida = null
-        rezultatas = null
+    fun onDistanceChange(value: String) {
+        distance = value
+        distanceError = null
+        result = null
     }
 
     // Pakeistos sąnaudos
-    fun keistiSanaudas(reiksme: String) {
-        sanaudos = reiksme
-        sanaudosKlaida = null
-        rezultatas = null
+    fun onConsumptionChange(value: String) {
+        consumption = value
+        consumptionError = null
+        result = null
     }
 
     // Pakeista kuro kaina
-    fun keistiKaina(reiksme: String) {
-        kaina = reiksme
-        kainosKlaida = null
-        rezultatas = null
+    fun onPriceChange(value: String) {
+        price = value
+        priceError = null
+        result = null
     }
 
     // Pakeistas kuro tipas
-    fun keistiKuroTipa(reiksme: KuroTipas) {
-        kuroTipas = reiksme
-        rezultatas = null
+    fun onFuelTypeChange(value: FuelType) {
+        fuelType = value
+        result = null
     }
 
     // Perjungtas „pirmyn ir atgal“
-    fun keistiPirmynIrAtgal(reiksme: Boolean) {
-        pirmynIrAtgal = reiksme
-        rezultatas = null
+    fun onRoundTripChange(value: Boolean) {
+        roundTrip = value
+        result = null
     }
 
     // Pakeistas keleivių skaičius
-    fun keistiKeleivius(reiksme: Float) {
-        keleiviuSlankiklis = reiksme
-        rezultatas = null
+    fun onPassengersChange(value: Float) {
+        passengersSlider = value
+        result = null
     }
 
     /** Patikrina įvestį, apskaičiuoja ir įrašo į istoriją. Grąžina true, jei pavyko. */
-    fun skaiciuoti(): Boolean {
+    fun calculate(): Boolean {
         // Patikrina visus tris laukus
-        atstumoKlaida = KuroSkaiciuokle.patikrinti(atstumas, KuroSkaiciuokle.MAX_ATSTUMAS)
-        sanaudosKlaida = KuroSkaiciuokle.patikrinti(sanaudos, KuroSkaiciuokle.MAX_SANAUDOS)
-        kainosKlaida = KuroSkaiciuokle.patikrinti(kaina, KuroSkaiciuokle.MAX_KAINA)
+        distanceError = FuelCalculator.validate(distance, FuelCalculator.MAX_DISTANCE)
+        consumptionError = FuelCalculator.validate(consumption, FuelCalculator.MAX_CONSUMPTION)
+        priceError = FuelCalculator.validate(price, FuelCalculator.MAX_PRICE)
 
         // Jei yra bent viena klaida – neskaičiuoja
-        if (atstumoKlaida != null || sanaudosKlaida != null || kainosKlaida != null) {
-            rezultatas = null
+        if (distanceError != null || consumptionError != null || priceError != null) {
+            result = null
             return false
         }
 
         // Paverčia tekstą skaičiais ir skaičiuoja
-        val naujasRezultatas = KuroSkaiciuokle.apskaiciuoti(
-            atstumasKm = KuroSkaiciuokle.paversti(atstumas)!!,
-            sanaudos100Km = KuroSkaiciuokle.paversti(sanaudos)!!,
-            litroKaina = KuroSkaiciuokle.paversti(kaina)!!,
-            pirmynIrAtgal = pirmynIrAtgal,
-            keleiviai = keleiviai,
-            kuroTipas = kuroTipas
+        val newResult = FuelCalculator.calculate(
+            distanceKm = FuelCalculator.parse(distance)!!,
+            consumptionPer100Km = FuelCalculator.parse(consumption)!!,
+            pricePerLiter = FuelCalculator.parse(price)!!,
+            roundTrip = roundTrip,
+            passengers = passengers,
+            fuelType = fuelType
         )
         // Parodo rezultatą
-        rezultatas = naujasRezultatas
+        result = newResult
         // Įrašo į istorijos pradžią (naujausias viršuje)
-        istorija.add(0, IstorijosIrasas(kitasId++, naujasRezultatas))
+        history.add(0, HistoryEntry(nextId++, newResult))
         return true
     }
 
     // Išvalo visus laukus ir grąžina numatytuosius nustatymus
-    fun isvalytiLaukus() {
-        atstumas = ""
-        sanaudos = ""
-        kaina = ""
-        atstumoKlaida = null
-        sanaudosKlaida = null
-        kainosKlaida = null
-        kuroTipas = KuroTipas.BENZINAS
-        pirmynIrAtgal = false
-        keleiviuSlankiklis = 1f
-        rezultatas = null
+    fun clearInputs() {
+        distance = ""
+        consumption = ""
+        price = ""
+        distanceError = null
+        consumptionError = null
+        priceError = null
+        fuelType = FuelType.PETROL
+        roundTrip = false
+        passengersSlider = 1f
+        result = null
     }
 
     // Ištrina įrašą iš istorijos
-    fun istrintiIrasa(irasas: IstorijosIrasas) {
-        istorija.remove(irasas)
+    fun deleteEntry(entry: HistoryEntry) {
+        history.remove(entry)
     }
 }

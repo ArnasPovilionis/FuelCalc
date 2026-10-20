@@ -47,41 +47,41 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
 // Programėlės puslapiai: adresas, pavadinimas ir ikona apatinėje juostoje
-enum class Puslapis(val marsrutas: String, val pavadinimas: String, val ikona: ImageVector) {
-    Skaiciuokle("skaiciuokle", "Skaičiuoklė", Icons.Filled.Home),
-    Istorija("istorija", "Istorija", Icons.AutoMirrored.Filled.List),
-    Apie("apie", "Apie", Icons.Filled.Info)
+enum class Screen(val route: String, val title: String, val icon: ImageVector) {
+    Calculator("calculator", "Skaičiuoklė", Icons.Filled.Home),
+    History("history", "Istorija", Icons.AutoMirrored.Filled.List),
+    About("about", "Apie", Icons.Filled.Info)
 }
 
 // Programėlės karkasas: viršutinė juosta, apatinė navigacija, puslapiai ir pranešimai
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Programele(
-    duomenys: KuroViewModel,
-    ekranoPlotis: WindowWidthSizeClass
+fun FuelCalcApp(
+    viewModel: FuelViewModel,
+    widthSizeClass: WindowWidthSizeClass
 ) {
     // Valdo perėjimus tarp puslapių
-    val navigacija = rememberNavController()
+    val navController = rememberNavController()
     // Kuris puslapis dabar atidarytas
-    val dabartinisIrasas by navigacija.currentBackStackEntryAsState()
-    val dabartinisPuslapis = Puslapis.entries.find { it.marsrutas == dabartinisIrasas?.destination?.route }
-        ?: Puslapis.Skaiciuokle
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = Screen.entries.find { it.route == backStackEntry?.destination?.route }
+        ?: Screen.Calculator
 
     // Snackbar pranešimų valdymas
-    val pranesimuBusena = remember { SnackbarHostState() }
-    val korutinos = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     // Parodo pranešimą apačioje (prieš tai paslepia seną)
-    val rodytiPranesima: (String) -> Unit = { pranesimas ->
-        korutinos.launch {
-            pranesimuBusena.currentSnackbarData?.dismiss()
-            pranesimuBusena.showSnackbar(pranesimas)
+    val showSnackbar: (String) -> Unit = { message ->
+        scope.launch {
+            snackbarHostState.currentSnackbarData?.dismiss()
+            snackbarHostState.showSnackbar(message)
         }
     }
 
     // Ar atidarytas trijų taškų meniu
-    var meniuAtidarytas by remember { mutableStateOf(false) }
+    var menuExpanded by remember { mutableStateOf(false) }
     // Ar rodomas langas „Autorius“
-    var rodytiAutoriausLanga by remember { mutableStateOf(false) }
+    var showAuthorDialog by remember { mutableStateOf(false) }
 
     // Ekrano karkasas: viršus, apačia, pranešimai ir turinys
     Scaffold(
@@ -96,7 +96,7 @@ fun Programele(
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.secondary
                         )
-                        Text(dabartinisPuslapis.pavadinimas, style = MaterialTheme.typography.titleLarge)
+                        Text(currentScreen.title, style = MaterialTheme.typography.titleLarge)
                     }
                 },
                 // Juostos spalvos
@@ -108,21 +108,21 @@ fun Programele(
                 // Dešinėje: trijų taškų mygtukas ir meniu
                 actions = {
                     // Trijų taškų mygtukas – atidaro meniu
-                    IconButton(onClick = { meniuAtidarytas = true }) {
+                    IconButton(onClick = { menuExpanded = true }) {
                         Icon(Icons.Filled.MoreVert, contentDescription = "Meniu")
                     }
                     // Išskleidžiamas meniu
                     DropdownMenu(
-                        expanded = meniuAtidarytas,
-                        onDismissRequest = { meniuAtidarytas = false }
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false }
                     ) {
                         // Meniu punktas „Autorius“ – uždaro meniu ir atidaro langą
                         DropdownMenuItem(
                             text = { Text("Autorius") },
                             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null) },
                             onClick = {
-                                meniuAtidarytas = false
-                                rodytiAutoriausLanga = true
+                                menuExpanded = false
+                                showAuthorDialog = true
                             }
                         )
                     }
@@ -136,13 +136,13 @@ fun Programele(
                 tonalElevation = 0.dp
             ) {
                 // Po vieną mygtuką kiekvienam puslapiui
-                Puslapis.entries.forEach { puslapis ->
+                Screen.entries.forEach { screen ->
                     NavigationBarItem(
-                        selected = dabartinisPuslapis == puslapis,
+                        selected = currentScreen == screen,
                         // Paspaudus – pereina į tą puslapį
                         onClick = {
-                            navigacija.navigate(puslapis.marsrutas) {
-                                popUpTo(navigacija.graph.findStartDestination().id) {
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -151,16 +151,16 @@ fun Programele(
                         },
                         // Ikona; prie „Istorija“ – ženkliukas su įrašų skaičiumi
                         icon = {
-                            if (puslapis == Puslapis.Istorija && duomenys.istorija.isNotEmpty()) {
-                                BadgedBox(badge = { Badge { Text("${duomenys.istorija.size}") } }) {
-                                    Icon(puslapis.ikona, contentDescription = puslapis.pavadinimas)
+                            if (screen == Screen.History && viewModel.history.isNotEmpty()) {
+                                BadgedBox(badge = { Badge { Text("${viewModel.history.size}") } }) {
+                                    Icon(screen.icon, contentDescription = screen.title)
                                 }
                             } else {
-                                Icon(puslapis.ikona, contentDescription = puslapis.pavadinimas)
+                                Icon(screen.icon, contentDescription = screen.title)
                             }
                         },
                         // Užrašas po ikona
-                        label = { Text(puslapis.pavadinimas) },
+                        label = { Text(screen.title) },
                         // Pasirinkto mygtuko spalvos
                         colors = NavigationBarItemDefaults.colors(
                             selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
@@ -173,9 +173,9 @@ fun Programele(
         },
         // Vieta Snackbar pranešimams
         snackbarHost = {
-            SnackbarHost(pranesimuBusena) { pranesimoDuomenys ->
+            SnackbarHost(snackbarHostState) { data ->
                 Snackbar(
-                    snackbarData = pranesimoDuomenys,
+                    snackbarData = data,
                     shape = MaterialTheme.shapes.medium,
                     containerColor = MaterialTheme.colorScheme.inverseSurface,
                     contentColor = MaterialTheme.colorScheme.inverseOnSurface
@@ -184,41 +184,41 @@ fun Programele(
         },
         // Fono spalva
         containerColor = MaterialTheme.colorScheme.background
-    ) { vidinisTarpas ->
+    ) { innerPadding ->
         // Puslapių sąrašas: rodo tą, kuris pasirinktas (pradžioje – skaičiuoklė)
         NavHost(
-            navController = navigacija,
-            startDestination = Puslapis.Skaiciuokle.marsrutas,
-            modifier = Modifier.padding(vidinisTarpas)
+            navController = navController,
+            startDestination = Screen.Calculator.route,
+            modifier = Modifier.padding(innerPadding)
         ) {
             // Skaičiuoklės puslapis
-            composable(Puslapis.Skaiciuokle.marsrutas) {
-                SkaiciuoklesEkranas(
-                    duomenys = duomenys,
-                    platusEkranas = ekranoPlotis != WindowWidthSizeClass.Compact,
-                    rodytiPranesima = rodytiPranesima
+            composable(Screen.Calculator.route) {
+                CalculatorScreen(
+                    viewModel = viewModel,
+                    isWideScreen = widthSizeClass != WindowWidthSizeClass.Compact,
+                    showSnackbar = showSnackbar
                 )
             }
             // Istorijos puslapis
-            composable(Puslapis.Istorija.marsrutas) {
-                IstorijosEkranas(duomenys = duomenys, rodytiPranesima = rodytiPranesima)
+            composable(Screen.History.route) {
+                HistoryScreen(viewModel = viewModel, showSnackbar = showSnackbar)
             }
             // „Apie“ puslapis
-            composable(Puslapis.Apie.marsrutas) {
-                ApieEkranas()
+            composable(Screen.About.route) {
+                AboutScreen()
             }
         }
     }
 
     // Langas „Autorius“ (rodomas paspaudus meniu punktą)
-    if (rodytiAutoriausLanga) {
+    if (showAuthorDialog) {
         AlertDialog(
-            onDismissRequest = { rodytiAutoriausLanga = false },
+            onDismissRequest = { showAuthorDialog = false },
             icon = { Icon(Icons.Filled.Person, contentDescription = null) },
             title = { Text("Autorius") },
-            text = { Text("$AUTORIAUS_VARDAS\nGrupė: $AUTORIAUS_GRUPE") },
+            text = { Text("$AUTHOR_NAME\nGrupė: $AUTHOR_GROUP") },
             confirmButton = {
-                TextButton(onClick = { rodytiAutoriausLanga = false }) { Text("Gerai") }
+                TextButton(onClick = { showAuthorDialog = false }) { Text("Gerai") }
             }
         )
     }

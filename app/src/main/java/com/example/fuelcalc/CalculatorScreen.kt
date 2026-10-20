@@ -66,26 +66,26 @@ import androidx.compose.ui.unit.dp
 
 // „Skaičiuoklė“ puslapis: įvesties laukai, mygtukai ir rezultatas
 @Composable
-fun SkaiciuoklesEkranas(
-    duomenys: KuroViewModel,
-    platusEkranas: Boolean,
-    rodytiPranesima: (String) -> Unit
+fun CalculatorScreen(
+    viewModel: FuelViewModel,
+    isWideScreen: Boolean,
+    showSnackbar: (String) -> Unit
 ) {
     // Leidžia paslėpti klaviatūrą
-    val fokusas = LocalFocusManager.current
+    val focusManager = LocalFocusManager.current
     // Kas vyksta paspaudus „Apskaičiuoti“
-    val kaiSkaiciuoti = {
+    val onCalculate = {
         // Paslepia klaviatūrą
-        fokusas.clearFocus()
+        focusManager.clearFocus()
         // Skaičiuoja ir parodo pranešimą: pavyko arba klaida
-        if (duomenys.skaiciuoti()) {
-            rodytiPranesima("Skaičiavimas išsaugotas istorijoje")
+        if (viewModel.calculate()) {
+            showSnackbar("Skaičiavimas išsaugotas istorijoje")
         } else {
-            rodytiPranesima("Patikrinkite įvestus duomenis")
+            showSnackbar("Patikrinkite įvestus duomenis")
         }
     }
 
-    if (platusEkranas) {
+    if (isWideScreen) {
         // Platus ekranas (planšetė, horizontali padėtis): įvestis kairėje, rezultatas dešinėje
         Row(
             modifier = Modifier
@@ -99,11 +99,11 @@ fun SkaiciuoklesEkranas(
                     .weight(1f)
                     .verticalScroll(rememberScrollState())
             ) {
-                IvestiesSekcija(duomenys, kaiSkaiciuoti)
+                InputSection(viewModel, onCalculate)
             }
             // Dešinysis stulpelis: rezultatas
             Column(modifier = Modifier.weight(1f)) {
-                RezultatoSekcija(duomenys.rezultatas)
+                ResultSection(viewModel.result)
             }
         }
     } else {
@@ -114,19 +114,19 @@ fun SkaiciuoklesEkranas(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 12.dp)
         ) {
-            IvestiesSekcija(duomenys, kaiSkaiciuoti)
+            InputSection(viewModel, onCalculate)
             Spacer(Modifier.height(20.dp))
-            RezultatoSekcija(duomenys.rezultatas)
+            ResultSection(viewModel.result)
         }
     }
 }
 
 // Kortelė su antrašte, į kurią dedami kiti elementai
 @Composable
-private fun SekcijosKortele(
-    pavadinimas: String,
+private fun SectionCard(
+    title: String,
     modifier: Modifier = Modifier,
-    turinys: @Composable () -> Unit
+    content: @Composable () -> Unit
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -141,57 +141,57 @@ private fun SekcijosKortele(
         ) {
             // Antraštė didžiosiomis raidėmis
             Text(
-                pavadinimas.uppercase(),
+                title.uppercase(),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary
             )
             // Kortelės turinys, kurį perduoda kviečianti funkcija
-            turinys()
+            content()
         }
     }
 }
 
 // Visi įvesties laukai, nustatymai ir mygtukai
 @Composable
-private fun IvestiesSekcija(duomenys: KuroViewModel, kaiSkaiciuoti: () -> Unit) {
+private fun InputSection(viewModel: FuelViewModel, onCalculate: () -> Unit) {
     // Kortelės ir mygtukai vienas po kito
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         // 1 kortelė: trys skaičių laukai
-        SekcijosKortele(pavadinimas = "Kelionės duomenys") {
+        SectionCard(title = "Kelionės duomenys") {
             // Atstumas (km)
-            SkaiciausLaukas(
-                reiksme = duomenys.atstumas,
-                keistiReiksme = duomenys::keistiAtstuma,
-                pavadinimas = "Atstumas",
-                vienetai = "km",
-                ikona = Icons.Filled.Place,
-                klaida = duomenys.atstumoKlaida,
-                klaviaturosVeiksmas = ImeAction.Next
+            NumberField(
+                value = viewModel.distance,
+                onValueChange = viewModel::onDistanceChange,
+                label = "Atstumas",
+                suffix = "km",
+                icon = Icons.Filled.Place,
+                error = viewModel.distanceError,
+                imeAction = ImeAction.Next
             )
             // Kuro sąnaudos (l/100 km)
-            SkaiciausLaukas(
-                reiksme = duomenys.sanaudos,
-                keistiReiksme = duomenys::keistiSanaudas,
-                pavadinimas = "Kuro sąnaudos",
-                vienetai = "l/100 km",
-                ikona = Icons.Filled.Settings,
-                klaida = duomenys.sanaudosKlaida,
-                klaviaturosVeiksmas = ImeAction.Next
+            NumberField(
+                value = viewModel.consumption,
+                onValueChange = viewModel::onConsumptionChange,
+                label = "Kuro sąnaudos",
+                suffix = "l/100 km",
+                icon = Icons.Filled.Settings,
+                error = viewModel.consumptionError,
+                imeAction = ImeAction.Next
             )
             // Kuro kaina (€/l)
-            SkaiciausLaukas(
-                reiksme = duomenys.kaina,
-                keistiReiksme = duomenys::keistiKaina,
-                pavadinimas = "Kuro kaina",
-                vienetai = "€/l",
-                ikona = Icons.Filled.ShoppingCart,
-                klaida = duomenys.kainosKlaida,
-                klaviaturosVeiksmas = ImeAction.Done
+            NumberField(
+                value = viewModel.price,
+                onValueChange = viewModel::onPriceChange,
+                label = "Kuro kaina",
+                suffix = "€/l",
+                icon = Icons.Filled.ShoppingCart,
+                error = viewModel.priceError,
+                imeAction = ImeAction.Done
             )
         }
 
         // 2 kortelė: kuro tipas, pirmyn ir atgal, keleiviai
-        SekcijosKortele(pavadinimas = "Nustatymai") {
+        SectionCard(title = "Nustatymai") {
             // Kuro tipo antraštė
             Text("Kuro tipas", style = MaterialTheme.typography.titleMedium)
             // Kuro tipo pasirinkimai šalia vienas kito (Benzinas, Dyzelinas)
@@ -199,11 +199,11 @@ private fun IvestiesSekcija(duomenys: KuroViewModel, kaiSkaiciuoti: () -> Unit) 
                 modifier = Modifier.selectableGroup(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                KuroTipas.entries.forEach { tipas ->
-                    KuroTipoPasirinkimas(
-                        tipas = tipas,
-                        pasirinktas = duomenys.kuroTipas == tipas,
-                        paspaudus = { duomenys.keistiKuroTipa(tipas) },
+                FuelType.entries.forEach { type ->
+                    FuelTypeOption(
+                        type = type,
+                        selected = viewModel.fuelType == type,
+                        onClick = { viewModel.onFuelTypeChange(type) },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -228,8 +228,8 @@ private fun IvestiesSekcija(duomenys: KuroViewModel, kaiSkaiciuoti: () -> Unit) 
                 }
                 // Jungiklis „pirmyn ir atgal“
                 Switch(
-                    checked = duomenys.pirmynIrAtgal,
-                    onCheckedChange = duomenys::keistiPirmynIrAtgal
+                    checked = viewModel.roundTrip,
+                    onCheckedChange = viewModel::onRoundTripChange
                 )
             }
 
@@ -255,14 +255,14 @@ private fun IvestiesSekcija(duomenys: KuroViewModel, kaiSkaiciuoti: () -> Unit) 
                     ) {
                         Icon(Icons.Filled.Person, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text("${duomenys.keleiviai}", style = MaterialTheme.typography.labelLarge)
+                        Text("${viewModel.passengers}", style = MaterialTheme.typography.labelLarge)
                     }
                 }
             }
             // Slankiklis keleiviams (1–5)
             Slider(
-                value = duomenys.keleiviuSlankiklis,
-                onValueChange = duomenys::keistiKeleivius,
+                value = viewModel.passengersSlider,
+                onValueChange = viewModel::onPassengersChange,
                 valueRange = 1f..5f,
                 steps = 3
             )
@@ -272,7 +272,7 @@ private fun IvestiesSekcija(duomenys: KuroViewModel, kaiSkaiciuoti: () -> Unit) 
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             // Mygtukas „Išvalyti“
             OutlinedButton(
-                onClick = duomenys::isvalytiLaukus,
+                onClick = viewModel::clearInputs,
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
@@ -284,7 +284,7 @@ private fun IvestiesSekcija(duomenys: KuroViewModel, kaiSkaiciuoti: () -> Unit) 
             }
             // Mygtukas „Apskaičiuoti“ (dvigubai platesnis)
             Button(
-                onClick = kaiSkaiciuoti,
+                onClick = onCalculate,
                 modifier = Modifier
                     .weight(2f)
                     .height(56.dp),
@@ -304,71 +304,71 @@ private fun IvestiesSekcija(duomenys: KuroViewModel, kaiSkaiciuoti: () -> Unit) 
 
 // Vienas kuro tipo pasirinkimas (rėmelis su RadioButton ir pavadinimu)
 @Composable
-private fun KuroTipoPasirinkimas(
-    tipas: KuroTipas,
-    pasirinktas: Boolean,
-    paspaudus: () -> Unit,
+private fun FuelTypeOption(
+    type: FuelType,
+    selected: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Fono spalva: pasirinkus – šviesiai mėlyna, kitaip – permatoma (keičiasi su animacija)
-    val fonoSpalva by animateColorAsState(
-        if (pasirinktas) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-        label = "fonoSpalva"
+    val containerColor by animateColorAsState(
+        if (selected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+        label = "fuelTypeContainer"
     )
     // Rėmelio spalva: pasirinkus – mėlyna, kitaip – pilka
-    val remelioSpalva by animateColorAsState(
-        if (pasirinktas) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
-        label = "remelioSpalva"
+    val borderColor by animateColorAsState(
+        if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant,
+        label = "fuelTypeBorder"
     )
     // Paspaudžiamas rėmelis
     Surface(
         modifier = modifier
             .clip(MaterialTheme.shapes.medium)
             .selectable(
-                selected = pasirinktas,
-                onClick = paspaudus,
+                selected = selected,
+                onClick = onClick,
                 role = Role.RadioButton
             ),
         shape = MaterialTheme.shapes.medium,
-        color = fonoSpalva,
-        border = BorderStroke(if (pasirinktas) 2.dp else 1.dp, remelioSpalva)
+        color = containerColor,
+        border = BorderStroke(if (selected) 2.dp else 1.dp, borderColor)
     ) {
         // RadioButton ir pavadinimas šalia vienas kito
         Row(
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            RadioButton(selected = pasirinktas, onClick = null)
+            RadioButton(selected = selected, onClick = null)
             Spacer(Modifier.width(8.dp))
-            Text(tipas.pavadinimas, style = MaterialTheme.typography.titleMedium)
+            Text(type.label, style = MaterialTheme.typography.titleMedium)
         }
     }
 }
 
 // Vienas laukas skaičiui įvesti (su ikona, vienetais ir klaidos tekstu)
 @Composable
-private fun SkaiciausLaukas(
-    reiksme: String,
-    keistiReiksme: (String) -> Unit,
-    pavadinimas: String,
-    vienetai: String,
-    ikona: ImageVector,
-    klaida: String?,
-    klaviaturosVeiksmas: ImeAction
+private fun NumberField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    suffix: String,
+    icon: ImageVector,
+    error: String?,
+    imeAction: ImeAction
 ) {
     OutlinedTextField(
-        value = reiksme,
-        onValueChange = keistiReiksme,
+        value = value,
+        onValueChange = onValueChange,
         // Lauko pavadinimas
-        label = { Text(pavadinimas) },
+        label = { Text(label) },
         // Ikona kairėje
-        leadingIcon = { Icon(ikona, contentDescription = null) },
+        leadingIcon = { Icon(icon, contentDescription = null) },
         // Vienetai dešinėje (km, l/100 km, €/l)
-        suffix = { Text(vienetai) },
+        suffix = { Text(suffix) },
         // Jei yra klaida – laukas raudonas ir po juo rodomas klaidos tekstas
-        isError = klaida != null,
-        supportingText = if (klaida != null) {
-            { Text(klaida) }
+        isError = error != null,
+        supportingText = if (error != null) {
+            { Text(error) }
         } else {
             null
         },
@@ -387,7 +387,7 @@ private fun SkaiciausLaukas(
         // Skaičių klaviatūra; mygtukas „Toliau“ arba „Baigta“
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Decimal,
-            imeAction = klaviaturosVeiksmas
+            imeAction = imeAction
         ),
         modifier = Modifier.fillMaxWidth()
     )
@@ -395,18 +395,18 @@ private fun SkaiciausLaukas(
 
 // Rezultato kortelė (rodoma tik po skaičiavimo)
 @Composable
-private fun RezultatoSekcija(rezultatas: KelionesRezultatas?) {
+private fun ResultSection(result: TripResult?) {
     // Prisimenamas paskutinis rezultatas, kad slėpimo animacija turėtų ką rodyti
-    var paskutinisRezultatas by remember { mutableStateOf(rezultatas) }
-    if (rezultatas != null) paskutinisRezultatas = rezultatas
+    var lastResult by remember { mutableStateOf(result) }
+    if (result != null) lastResult = result
 
     // Paprasta animacija: rezultato kortelė išsiskleidžia ir išryškėja
     AnimatedVisibility(
-        visible = rezultatas != null,
+        visible = result != null,
         enter = fadeIn() + expandVertically(),
         exit = fadeOut() + shrinkVertically()
     ) {
-        paskutinisRezultatas?.let { rodomas ->
+        lastResult?.let { result ->
             // Rezultato kortelė
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -429,34 +429,34 @@ private fun RezultatoSekcija(rezultatas: KelionesRezultatas?) {
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         // Teksto spalva ant spalvoto fono (balta)
-                        val tekstoSpalva = MaterialTheme.colorScheme.onPrimary
+                        val onGradient = MaterialTheme.colorScheme.onPrimary
                         // Užrašas „KELIONĖS KAINA“
                         Text(
                             "KELIONĖS KAINA",
                             style = MaterialTheme.typography.labelSmall,
-                            color = tekstoSpalva.copy(alpha = 0.8f)
+                            color = onGradient.copy(alpha = 0.8f)
                         )
                         // Bendra kaina dideliu šriftu
                         Text(
-                            "${rodomas.bendraKaina.formatuoti2()} €",
+                            "${result.totalCost.format2()} €",
                             style = MaterialTheme.typography.displaySmall,
-                            color = tekstoSpalva
+                            color = onGradient
                         )
                         // Kuro tipas ir ar pirmyn ir atgal
                         Text(
-                            rodomas.kuroTipas.pavadinimas + if (rodomas.pirmynIrAtgal) " • pirmyn ir atgal" else "",
+                            "${result.fuelType.label}" + if (result.roundTrip) " • pirmyn ir atgal" else "",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = tekstoSpalva.copy(alpha = 0.8f)
+                            color = onGradient.copy(alpha = 0.8f)
                         )
                         // Tarpas
                         Spacer(Modifier.height(12.dp))
                         // Trys langeliai šalia vienas kito: atstumas, kuras, kaina vienam žmogui
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            StatistikosLangelis("Atstumas", "${rodomas.visasAtstumasKm.formatuoti2()} km", Modifier.weight(1f))
-                            StatistikosLangelis("Kuro", "${rodomas.litrai.formatuoti2()} l", Modifier.weight(1f))
-                            StatistikosLangelis(
-                                "1 žm. (${rodomas.keleiviai})",
-                                "${rodomas.kainaVienam.formatuoti2()} €",
+                            StatTile("Atstumas", "${result.totalDistanceKm.format2()} km", Modifier.weight(1f))
+                            StatTile("Kuro", "${result.liters.format2()} l", Modifier.weight(1f))
+                            StatTile(
+                                "1 žm. (${result.passengers})",
+                                "${result.costPerPerson.format2()} €",
                                 Modifier.weight(1f)
                             )
                         }
@@ -469,18 +469,18 @@ private fun RezultatoSekcija(rezultatas: KelionesRezultatas?) {
 
 // Mažas langelis rezultate: pavadinimas viršuje, reikšmė apačioje
 @Composable
-private fun StatistikosLangelis(pavadinimas: String, reiksme: String, modifier: Modifier = Modifier) {
-    val tekstoSpalva = MaterialTheme.colorScheme.onPrimary
+private fun StatTile(label: String, value: String, modifier: Modifier = Modifier) {
+    val onGradient = MaterialTheme.colorScheme.onPrimary
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        color = tekstoSpalva.copy(alpha = 0.15f),
-        contentColor = tekstoSpalva
+        color = onGradient.copy(alpha = 0.15f),
+        contentColor = onGradient
     ) {
         // Pavadinimas ir reikšmė vienas po kito
         Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)) {
-            Text(pavadinimas, style = MaterialTheme.typography.labelSmall, color = tekstoSpalva.copy(alpha = 0.8f))
-            Text(reiksme, style = MaterialTheme.typography.titleSmall, maxLines = 1)
+            Text(label, style = MaterialTheme.typography.labelSmall, color = onGradient.copy(alpha = 0.8f))
+            Text(value, style = MaterialTheme.typography.titleSmall, maxLines = 1)
         }
     }
 }
