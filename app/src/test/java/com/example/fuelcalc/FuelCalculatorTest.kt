@@ -5,24 +5,24 @@ import org.junit.Test
 
 class FuelCalculatorTest {
 
-    private val delta = 0.001
+    private val paklaida = 0.001
 
     // Pagrindinis atvejis: kelionė į vieną pusę, vienas keleivis
     @Test
-    fun calculate_oneWay_returnsCorrectLitersAndCost() {
-        val result = FuelCalculator.calculate(
-            distanceKm = 100.0,
-            consumptionPer100Km = 6.5,
-            pricePerLiter = 1.60,
-            roundTrip = false,
-            passengers = 1,
-            fuelType = FuelType.PETROL
+    fun apskaiciuoti_iVienaPuse_teisingiLitraiIrKaina() {
+        val rezultatas = KuroSkaiciuokle.apskaiciuoti(
+            atstumasKm = 100.0,
+            sanaudos100Km = 6.5,
+            litroKaina = 1.60,
+            pirmynIrAtgal = false,
+            keleiviai = 1,
+            kuroTipas = KuroTipas.BENZINAS
         )
         // Kuras (l) = atstumas × sąnaudos / 100 = 100 × 6,5 / 100 = 6,5 l
-        assertEquals(6.5, result.liters, delta)
+        assertEquals(6.5, rezultatas.litrai, paklaida)
         // Kaina (€) = kuras × kuro kaina = 6,5 × 1,60 = 10,40 €
-        assertEquals(10.40, result.totalCost, delta)
+        assertEquals(10.40, rezultatas.bendraKaina, paklaida)
         // Kaina vienam žmogui = kaina / keleivių skaičius = 10,40 / 1 = 10,40 €
-        assertEquals(10.40, result.costPerPerson, delta)
+        assertEquals(10.40, rezultatas.kainaVienam, paklaida)
     }
 }

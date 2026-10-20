@@ -8,7 +8,7 @@ kiek kuro reikės kelionei ir kiek ji kainuos.
 
 > ⚠️ Prieš atsiskaitydami įrašykite savo grupę faile
 > `app/src/main/java/com/example/fuelcalc/FuelCalculator.kt` (eilutė
-> `const val AUTHOR_GROUP = "[GRUPĖ]"`). Ji automatiškai atsiras ir meniu „Autorius“, ir puslapyje „Apie“.
+> `const val AUTORIAUS_GRUPE = "[GRUPĖ]"`). Ji automatiškai atsiras ir meniu „Autorius“, ir puslapyje „Apie“.
 
 ## Kaip paleisti
 
@@ -62,10 +62,10 @@ kiek kuro reikės kelionei ir kiek ji kainuos.
 
 ## Kodėl testuojamas būtent šis atvejis
 
-Svarbiausia programėlės dalis – kainos skaičiavimas, todėl testuojama `FuelCalculator` logika
+Svarbiausia programėlės dalis – kainos skaičiavimas, todėl testuojama `KuroSkaiciuokle` logika (failas `FuelCalculator.kt`)
 (ji atskirta nuo UI, todėl testas greitas ir nereikia emuliatoriaus).
 
-**`calculate_oneWay_returnsCorrectLitersAndCost`** – patikrina pagrindinę formulę
+**`apskaiciuoti_iVienaPuse_teisingiLitraiIrKaina`** – patikrina pagrindinę formulę
 (100 km × 6,5 l/100 km = 6,5 l; 6,5 l × 1,60 € = 10,40 €) ir kainą vienam keleiviui.
 Jei ši formulė klaidinga – visa programėlė rodo neteisingas kainas.
 

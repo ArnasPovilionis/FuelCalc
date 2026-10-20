@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 
 // „Apie“ puslapis: autoriaus informacija ir programėlės aprašymas
 @Composable
-fun AboutScreen() {
+fun ApieEkranas() {
     // Visas puslapis: elementai vienas po kito, galima slinkti
     Column(
         modifier = Modifier
@@ -80,7 +80,7 @@ fun AboutScreen() {
                 // Užrašas „AUTORIUS“
                 Text("AUTORIUS", style = MaterialTheme.typography.labelSmall, color = tekstoSpalva.copy(alpha = 0.8f))
                 // Autoriaus vardas ir pavardė (iš FuelCalculator.kt)
-                Text(AUTHOR_NAME, style = MaterialTheme.typography.headlineSmall, color = tekstoSpalva)
+                Text(AUTORIAUS_VARDAS, style = MaterialTheme.typography.headlineSmall, color = tekstoSpalva)
                 // Tarpas
                 Spacer(Modifier.height(8.dp))
                 // Ovalus ženkliukas su grupe
@@ -90,7 +90,7 @@ fun AboutScreen() {
                     contentColor = tekstoSpalva
                 ) {
                     Text(
-                        "Grupė: $AUTHOR_GROUP",
+                        "Grupė: $AUTORIAUS_GRUPE",
                         style = MaterialTheme.typography.labelLarge,
                         modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)
                     )

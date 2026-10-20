@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 // Paletė: gilus mėlynas (pagrindinė), oranžinė (akcentas, „kuras“), turkio (papildoma)
-private val LightColors = lightColorScheme(
+private val SviesiosSpalvos = lightColorScheme(
     primary = Color(0xFF1E3A8A),
     onPrimary = Color.White,
     primaryContainer = Color(0xFFDCE4FF),
@@ -44,7 +44,7 @@ private val LightColors = lightColorScheme(
     outlineVariant = Color(0xFFD3D8E4)
 )
 
-private val DarkColors = darkColorScheme(
+private val TamsiosSpalvos = darkColorScheme(
     primary = Color(0xFF9DB4FF),
     onPrimary = Color(0xFF0B1B4D),
     primaryContainer = Color(0xFF233B7A),
@@ -72,7 +72,7 @@ private val DarkColors = darkColorScheme(
     outlineVariant = Color(0xFF353C4D)
 )
 
-private val AppTypography = Typography().run {
+private val Sriftai = Typography().run {
     copy(
         displaySmall = displaySmall.copy(fontWeight = FontWeight.ExtraBold, letterSpacing = (-0.5).sp),
         headlineMedium = headlineMedium.copy(fontWeight = FontWeight.Bold),
@@ -89,7 +89,7 @@ private val AppTypography = Typography().run {
     )
 }
 
-private val AppShapes = Shapes(
+private val Formos = Shapes(
     extraSmall = RoundedCornerShape(8.dp),
     small = RoundedCornerShape(12.dp),
     medium = RoundedCornerShape(16.dp),
@@ -98,14 +98,14 @@ private val AppShapes = Shapes(
 )
 
 @Composable
-fun FuelCalcTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+fun FuelCalcTema(
+    tamsiTema: Boolean = isSystemInDarkTheme(),
+    turinys: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColors else LightColors,
-        typography = AppTypography,
-        shapes = AppShapes,
-        content = content
+        colorScheme = if (tamsiTema) TamsiosSpalvos else SviesiosSpalvos,
+        typography = Sriftai,
+        shapes = Formos,
+        content = turinys
     )
 }

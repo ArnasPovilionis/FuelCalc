@@ -7,13 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import com.example.fuelcalc.ui.theme.FuelCalcTheme
+import com.example.fuelcalc.ui.theme.FuelCalcTema
 
 // Programėlės įėjimo taškas: atsidaro paleidus programėlę
 class MainActivity : ComponentActivity() {
 
     // Duomenų saugykla (išlieka pasukus telefoną)
-    private val viewModel: FuelViewModel by viewModels()
+    private val duomenys: KuroViewModel by viewModels()
 
     // Vykdoma paleidus programėlę
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
@@ -24,13 +24,13 @@ class MainActivity : ComponentActivity() {
         // Ekrano turinys
         setContent {
             // Programėlės tema: spalvos, šriftai, formos
-            FuelCalcTheme {
+            FuelCalcTema {
                 // Ekrano dydis: telefonas ar platus ekranas
-                val windowSizeClass = calculateWindowSizeClass(this)
+                val ekranoDydis = calculateWindowSizeClass(this)
                 // Visa programėlė
-                FuelCalcApp(
-                    viewModel = viewModel,
-                    widthSizeClass = windowSizeClass.widthSizeClass
+                Programele(
+                    duomenys = duomenys,
+                    ekranoPlotis = ekranoDydis.widthSizeClass
                 )
             }
         }
