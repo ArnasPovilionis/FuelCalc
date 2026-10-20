@@ -84,5 +84,5 @@ object FuelCalculator {
     }
 }
 
-// Suapvalina skaičių iki 2 skaitmenų po kablelio (pvz. 10.4 → "10.40")
+// Suapvalina skaičių iki 2 skaitmenų po kablelio (pvz. 10.4 → 10,40)
 fun Double.format2(): String = "%.2f".format(this)
