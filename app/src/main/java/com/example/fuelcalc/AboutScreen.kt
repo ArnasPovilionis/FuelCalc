@@ -47,7 +47,7 @@ fun AboutScreen() {
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
             // Teksto spalva ant spalvoto fono (balta)
-            val tekstoSpalva = MaterialTheme.colorScheme.onPrimary
+            val onGradient = MaterialTheme.colorScheme.onPrimary
             // Kortelės turinys su spalvų perėjimu (mėlyna → turkio), centruotas
             Column(
                 modifier = Modifier
@@ -65,29 +65,29 @@ fun AboutScreen() {
                     modifier = Modifier
                         .size(88.dp)
                         .clip(CircleShape)
-                        .background(tekstoSpalva.copy(alpha = 0.2f)),
+                        .background(onGradient.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Filled.Person,
                         contentDescription = null,
                         modifier = Modifier.size(52.dp),
-                        tint = tekstoSpalva
+                        tint = onGradient
                     )
                 }
                 // Tarpas
                 Spacer(Modifier.height(12.dp))
                 // Užrašas „AUTORIUS“
-                Text("AUTORIUS", style = MaterialTheme.typography.labelSmall, color = tekstoSpalva.copy(alpha = 0.8f))
+                Text("AUTORIUS", style = MaterialTheme.typography.labelSmall, color = onGradient.copy(alpha = 0.8f))
                 // Autoriaus vardas ir pavardė (iš FuelCalculator.kt)
-                Text(AUTHOR_NAME, style = MaterialTheme.typography.headlineSmall, color = tekstoSpalva)
+                Text(AUTHOR_NAME, style = MaterialTheme.typography.headlineSmall, color = onGradient)
                 // Tarpas
                 Spacer(Modifier.height(8.dp))
                 // Ovalus ženkliukas su grupe
                 Surface(
                     shape = CircleShape,
-                    color = tekstoSpalva.copy(alpha = 0.18f),
-                    contentColor = tekstoSpalva
+                    color = onGradient.copy(alpha = 0.18f),
+                    contentColor = onGradient
                 ) {
                     Text(
                         "Grupė: $AUTHOR_GROUP",
@@ -127,8 +127,8 @@ fun AboutScreen() {
                 // Skiriamoji linija
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 // Formulės
-                FormulesEilute("1", "Kuras (l) = atstumas × sąnaudos / 100")
-                FormulesEilute("2", "Kaina (€) = kuras × kuro kaina")
+                FormulaRow("1", "Kuras (l) = atstumas × sąnaudos / 100")
+                FormulaRow("2", "Kaina (€) = kuras × kuro kaina")
                 // Versija
                 Text(
                     "Versija 1.0",
@@ -142,7 +142,7 @@ fun AboutScreen() {
 
 // Viena formulės eilutė: numeris apskritime + formulės tekstas
 @Composable
-private fun FormulesEilute(numeris: String, tekstas: String) {
+private fun FormulaRow(number: String, text: String) {
     // Elementai iš kairės į dešinę
     Row(verticalAlignment = Alignment.CenterVertically) {
         // Oranžinis apskritimas su numeriu
@@ -154,7 +154,7 @@ private fun FormulesEilute(numeris: String, tekstas: String) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                numeris,
+                number,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
@@ -162,6 +162,6 @@ private fun FormulesEilute(numeris: String, tekstas: String) {
         // Tarpas
         Spacer(Modifier.width(12.dp))
         // Formulės tekstas
-        Text(tekstas, style = MaterialTheme.typography.bodyMedium)
+        Text(text, style = MaterialTheme.typography.bodyMedium)
     }
 }
