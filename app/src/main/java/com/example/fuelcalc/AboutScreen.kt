@@ -30,20 +30,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 
+// „Apie“ puslapis: autoriaus informacija ir programėlės aprašymas
 @Composable
 fun AboutScreen() {
+    // Visas puslapis: elementai vienas po kito, galima slinkti
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        // 1 kortelė: autorius
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.extraLarge,
             elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
         ) {
+            // Teksto spalva ant spalvoto fono (balta)
             val onGradient = MaterialTheme.colorScheme.onPrimary
+            // Kortelės turinys su spalvų perėjimu (mėlyna → turkio), centruotas
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -55,6 +60,7 @@ fun AboutScreen() {
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Apskritimas su žmogaus ikona
                 Box(
                     modifier = Modifier
                         .size(88.dp)
@@ -69,10 +75,15 @@ fun AboutScreen() {
                         tint = onGradient
                     )
                 }
+                // Tarpas
                 Spacer(Modifier.height(12.dp))
+                // Užrašas „AUTORIUS“
                 Text("AUTORIUS", style = MaterialTheme.typography.labelSmall, color = onGradient.copy(alpha = 0.8f))
+                // Autoriaus vardas ir pavardė (iš FuelCalculator.kt)
                 Text(AUTHOR_NAME, style = MaterialTheme.typography.headlineSmall, color = onGradient)
+                // Tarpas
                 Spacer(Modifier.height(8.dp))
+                // Ovalus ženkliukas su grupe
                 Surface(
                     shape = CircleShape,
                     color = onGradient.copy(alpha = 0.18f),
@@ -87,21 +98,25 @@ fun AboutScreen() {
             }
         }
 
+        // 2 kortelė: apie programėlę
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
             elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         ) {
+            // Kortelės turinys: elementai vienas po kito
             Column(
                 modifier = Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                // Antraštė
                 Text(
                     "APIE PROGRAMĖLĘ",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary
                 )
+                // Aprašymas
                 Text(
                     "FuelCalc apskaičiuoja, kiek kuro reikės kelionei ir kiek ji kainuos. " +
                         "Įveskite atstumą, kuro sąnaudas ir kuro kainą, pasirinkite kuro tipą, " +
@@ -109,9 +124,12 @@ fun AboutScreen() {
                         "parodys bendrą kainą ir kainą vienam žmogui.",
                     style = MaterialTheme.typography.bodyMedium
                 )
+                // Skiriamoji linija
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                // Formulės
                 FormulaRow("1", "Kuras (l) = atstumas × sąnaudos / 100")
                 FormulaRow("2", "Kaina (€) = kuras × kuro kaina")
+                // Versija
                 Text(
                     "Versija 1.0",
                     style = MaterialTheme.typography.bodySmall,
@@ -122,9 +140,12 @@ fun AboutScreen() {
     }
 }
 
+// Viena formulės eilutė: numeris apskritime + formulės tekstas
 @Composable
 private fun FormulaRow(number: String, text: String) {
+    // Elementai iš kairės į dešinę
     Row(verticalAlignment = Alignment.CenterVertically) {
+        // Oranžinis apskritimas su numeriu
         Box(
             modifier = Modifier
                 .size(28.dp)
@@ -138,7 +159,9 @@ private fun FormulaRow(number: String, text: String) {
                 color = MaterialTheme.colorScheme.onSecondaryContainer
             )
         }
+        // Tarpas
         Spacer(Modifier.width(12.dp))
+        // Formulės tekstas
         Text(text, style = MaterialTheme.typography.bodyMedium)
     }
 }
