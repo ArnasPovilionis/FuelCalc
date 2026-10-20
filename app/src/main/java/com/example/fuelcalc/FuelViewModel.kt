@@ -52,6 +52,7 @@ class FuelViewModel : ViewModel() {
     private var nextId = 0
 
     // Pakeitus bet kurią įvestį, senas rezultatas paslepiamas (jis jau nebeatitinka duomenų)
+
     // Pakeistas atstumas
     fun onDistanceChange(value: String) {
         distance = value
