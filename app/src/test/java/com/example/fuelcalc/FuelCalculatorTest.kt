@@ -18,8 +18,11 @@ class FuelCalculatorTest {
             passengers = 1,
             fuelType = FuelType.PETROL
         )
+        // Kuras (l) = atstumas × sąnaudos / 100 = 100 × 6,5 / 100 = 6,5 l
         assertEquals(6.5, result.liters, delta)
+        // Kaina (€) = kuras × kuro kaina = 6,5 × 1,60 = 10,40 €
         assertEquals(10.40, result.totalCost, delta)
+        // Kaina vienam žmogui = kaina / keleivių skaičius = 10,40 / 1 = 10,40 €
         assertEquals(10.40, result.costPerPerson, delta)
     }
 }
