@@ -17,7 +17,7 @@ kiek kuro reikės kelionei ir kiek ji kainuos.
 3. Palaukite, kol baigsis „Gradle Sync“ (pirmą kartą atsisiunčiamos bibliotekos, reikia interneto).
 4. Pasirinkite emuliatorių arba prijunkite telefoną (Android 8.0 / API 26 ar naujesnį) ir spauskite **Run ▶**.
 
-### Testų paleidimas
+### Testo paleidimas
 
 - Android Studio: atidarykite `app/src/test/java/com/example/fuelcalc/FuelCalculatorTest.kt`
   ir spauskite žalią ▶ prie klasės pavadinimo.
@@ -58,20 +58,16 @@ kiek kuro reikės kelionei ir kiek ji kainuos.
 | Material 3 tema (spalvos, tipografija, formos, šviesus/tamsus režimas) | `ui/theme/Theme.kt` |
 | Kintami ekrano dydžiai | `MainActivity.kt` (`calculateWindowSizeClass`) → `CalculatorScreen.kt`: telefone elementai vienas po kito, plačiame ekrane (planšetė / horizontaliai) – įvestis kairėje, rezultatas dešinėje |
 | Prieinamumas | `contentDescription` ikonoms, `selectable(role = Role.RadioButton)` kuro tipo pasirinkimui |
-| Unit testai | `app/src/test/.../FuelCalculatorTest.kt` |
+| Unit testas | `app/src/test/.../FuelCalculatorTest.kt` |
 
-## Kodėl testuojami būtent šie atvejai
+## Kodėl testuojamas būtent šis atvejis
 
 Svarbiausia programėlės dalis – kainos skaičiavimas, todėl testuojama `FuelCalculator` logika
-(ji atskirta nuo UI, todėl testai greiti ir nereikia emuliatoriaus):
+(ji atskirta nuo UI, todėl testas greitas ir nereikia emuliatoriaus).
 
-1. **`calculate_oneWay_returnsCorrectLitersAndCost`** – patikrina pagrindinę formulę
-   (100 km × 6,5 l/100 km = 6,5 l; 6,5 l × 1,60 € = 10,40 €). Jei ji klaidinga – visa programėlė neteisinga.
-2. **`calculate_roundTrip_doublesDistanceAndCost`** – „Kelionė pirmyn ir atgal“ (Switch) turi padvigubinti atstumą, kurą ir kainą.
-3. **`calculate_multiplePassengers_splitsCostPerPerson`** – keleivių skaičius (Slider) neturi keisti bendros kainos, tik kainą vienam žmogui.
-4. **`calculate_roundTripWithFivePassengers`** – visi nustatymai kartu (kraštinė reikšmė – 5 keleiviai).
-5. **`validate_invalidInput_returnsError`** – tuščias laukas, raidės, 0, neigiamas ir per didelis skaičius turi būti atmesti (kitaip būtų dalyba/skaičiavimas su beprasmiais duomenimis).
-6. **`validate_validInput_returnsNull`** – teisinga įvestis priimama, taip pat ir su kableliu (`6,5`), nes taip įprasta rašyti Lietuvoje.
+**`calculate_oneWay_returnsCorrectLitersAndCost`** – patikrina pagrindinę formulę
+(100 km × 6,5 l/100 km = 6,5 l; 6,5 l × 1,60 € = 10,40 €) ir kainą vienam keleiviui.
+Jei ši formulė klaidinga – visa programėlė rodo neteisingas kainas.
 
 ## Projekto struktūra
 
@@ -85,7 +81,7 @@ app/src/main/java/com/example/fuelcalc/
 ├── FuelCalculator.kt      – skaičiavimo ir tikrinimo logika, autoriaus duomenys
 ├── FuelViewModel.kt       – ekrano būsena ir istorija
 └── ui/theme/Theme.kt      – Material 3 spalvos, tipografija ir formos
-app/src/test/java/com/example/fuelcalc/FuelCalculatorTest.kt – unit testai
+app/src/test/java/com/example/fuelcalc/FuelCalculatorTest.kt – unit testas
 ```
 
 Naudojama: Android Gradle Plugin 8.7.3, Gradle 8.11.1, Kotlin 2.0.21, Compose BOM 2024.12.01,
