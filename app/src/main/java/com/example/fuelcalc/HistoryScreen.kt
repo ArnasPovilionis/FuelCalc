@@ -30,14 +30,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
+// „Istorija“ puslapis: visų skaičiavimų sąrašas
 @Composable
 fun HistoryScreen(viewModel: FuelViewModel, showSnackbar: (String) -> Unit) {
     if (viewModel.history.isEmpty()) {
+        // Istorija tuščia: ikona ir tekstas ekrano centre
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Apskritimas su sąrašo ikona
             Box(
                 modifier = Modifier
                     .size(96.dp)
@@ -52,8 +55,11 @@ fun HistoryScreen(viewModel: FuelViewModel, showSnackbar: (String) -> Unit) {
                     tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
+            // Tarpas
             Spacer(Modifier.size(16.dp))
+            // Antraštė
             Text("Istorija tuščia", style = MaterialTheme.typography.titleLarge)
+            // Paaiškinimas
             Text(
                 "Atlikite skaičiavimą – jis atsiras čia.",
                 style = MaterialTheme.typography.bodyMedium,
@@ -61,17 +67,21 @@ fun HistoryScreen(viewModel: FuelViewModel, showSnackbar: (String) -> Unit) {
             )
         }
     } else {
+        // Slenkamas sąrašas (naujausi įrašai viršuje)
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            // Po vieną kortelę kiekvienam įrašui
             items(viewModel.history, key = { it.id }) { entry ->
                 HistoryCard(
                     result = entry.result,
+                    // Paspaudus šiukšliadėžę – ištrina įrašą ir parodo pranešimą
                     onDelete = {
                         viewModel.deleteEntry(entry)
                         showSnackbar("Įrašas ištrintas")
                     },
+                    // Animacija trinant įrašą
                     modifier = Modifier.animateItem()
                 )
             }
@@ -79,6 +89,7 @@ fun HistoryScreen(viewModel: FuelViewModel, showSnackbar: (String) -> Unit) {
     }
 }
 
+// Viena istorijos kortelė: raidė kairėje, duomenys viduryje, trynimo mygtukas dešinėje
 @Composable
 private fun HistoryCard(result: TripResult, onDelete: () -> Unit, modifier: Modifier = Modifier) {
     Card(
@@ -87,16 +98,19 @@ private fun HistoryCard(result: TripResult, onDelete: () -> Unit, modifier: Modi
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
     ) {
+        // Elementai iš kairės į dešinę
         Row(
             modifier = Modifier.padding(start = 16.dp, top = 14.dp, bottom = 14.dp, end = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Spalvos pagal kuro tipą: benzinas – oranžinė, dyzelinas – turkio
             val (badgeBg, badgeFg) = when (result.fuelType) {
                 FuelType.PETROL -> MaterialTheme.colorScheme.secondaryContainer to
                     MaterialTheme.colorScheme.onSecondaryContainer
                 FuelType.DIESEL -> MaterialTheme.colorScheme.tertiaryContainer to
                     MaterialTheme.colorScheme.onTertiaryContainer
             }
+            // Kvadratėlis su kuro tipo raide (B arba D)
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -110,18 +124,23 @@ private fun HistoryCard(result: TripResult, onDelete: () -> Unit, modifier: Modi
                     color = badgeFg
                 )
             }
+            // Tarpas
             Spacer(Modifier.width(16.dp))
+            // Įrašo duomenys vienas po kito
             Column(modifier = Modifier.weight(1f)) {
+                // Bendra kaina
                 Text(
                     "${result.totalCost.format2()} €",
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
+                // Kuro tipas ir atstumas
                 Text(
                     "${result.fuelType.label} • ${result.totalDistanceKm.format2()} km" +
                         if (result.roundTrip) " (pirmyn ir atgal)" else "",
                     style = MaterialTheme.typography.bodyMedium
                 )
+                // Litrai, keleiviai ir kaina vienam žmogui
                 Text(
                     "${result.liters.format2()} l • ${result.passengers} kel. • " +
                         "${result.costPerPerson.format2()} € / žm.",
@@ -129,6 +148,7 @@ private fun HistoryCard(result: TripResult, onDelete: () -> Unit, modifier: Modi
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+            // Trynimo mygtukas (šiukšliadėžė)
             IconButton(onClick = onDelete) {
                 Icon(
                     Icons.Filled.Delete,
