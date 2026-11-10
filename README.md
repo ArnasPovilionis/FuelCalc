@@ -60,18 +60,13 @@ kiek kuro reikės kelionei ir kiek ji kainuos.
 | Prieinamumas | `contentDescription` ikonoms, `selectable(role = Role.RadioButton)` kuro tipo pasirinkimui |
 | Unit testai | `app/src/test/.../FuelCalculatorTest.kt` |
 
-## Kodėl testuojami būtent šie atvejai
+## Kodėl testuojamas būtent šis atvejis
 
 Svarbiausia programėlės dalis – kainos skaičiavimas, todėl testuojama `FuelCalculator` logika
 (ji atskirta nuo UI, todėl testai greiti ir nereikia emuliatoriaus):
 
 1. **`calculate_oneWay_returnsCorrectLitersAndCost`** – patikrina pagrindinę formulę
    (100 km × 6,5 l/100 km = 6,5 l; 6,5 l × 1,60 € = 10,40 €). Jei ji klaidinga – visa programėlė neteisinga.
-2. **`calculate_roundTrip_doublesDistanceAndCost`** – „Kelionė pirmyn ir atgal“ (Switch) turi padvigubinti atstumą, kurą ir kainą.
-3. **`calculate_multiplePassengers_splitsCostPerPerson`** – keleivių skaičius (Slider) neturi keisti bendros kainos, tik kainą vienam žmogui.
-4. **`calculate_roundTripWithFivePassengers`** – visi nustatymai kartu (kraštinė reikšmė – 5 keleiviai).
-5. **`validate_invalidInput_returnsError`** – tuščias laukas, raidės, 0, neigiamas ir per didelis skaičius turi būti atmesti (kitaip būtų dalyba/skaičiavimas su beprasmiais duomenimis).
-6. **`validate_validInput_returnsNull`** – teisinga įvestis priimama, taip pat ir su kableliu (`6,5`), nes taip įprasta rašyti Lietuvoje.
 
 ## Projekto struktūra
 
