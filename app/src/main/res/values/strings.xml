@@ -1,3 +1,77 @@
 <resources>
-    <string name="app_name">FuelCalc</string>
+    <string name="app_name">Business Card</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Card</string>
+    <string name="nav_cv">CV</string>
+    <string name="nav_portfolio">Portfolio</string>
+    <string name="nav_contact">Contact</string>
+
+    <!-- Language -->
+    <string name="menu_language">Language</string>
+    <string name="language_lt">Lietuvių</string>
+    <string name="language_en">English</string>
+
+    <!-- Home -->
+    <string name="home_role">Mobile app developer (student)</string>
+    <string name="home_group">Group: %1$s</string>
+    <string name="home_photo_description">Profile photo</string>
+    <string name="home_take_photo">Take a new photo</string>
+    <string name="home_show_cv">Show CV</string>
+    <string name="home_show_portfolio">Show portfolio</string>
+    <string name="home_contact_me">Contact me</string>
+    <string name="home_send_email">Send email to %1$s</string>
+    <string name="camera_not_available">No camera app found on this device</string>
+    <string name="photo_updated">Photo updated</string>
+
+    <!-- CV -->
+    <string name="cv_section_education">Education</string>
+    <string name="cv_section_experience">Experience</string>
+    <string name="cv_section_skills">Skills</string>
+    <string name="cv_section_other">Other</string>
+    <string name="cv_education_title">VILNIUS TECH</string>
+    <string name="cv_education_details">Vilnius Gediminas Technical University, group MKDF23/2 (studies in progress)</string>
+    <string name="cv_skills_title">Mobile development</string>
+    <string name="cv_skills_details">Kotlin, Jetpack Compose, Material 3, Room, Git</string>
+    <string name="cv_languages_title">Languages</string>
+    <string name="cv_languages_details">Lithuanian (native), English</string>
+    <string name="cv_add">Add CV entry</string>
+    <string name="cv_added">CV entry saved</string>
+
+    <!-- Portfolio -->
+    <string name="portfolio_fuelcalc_title">FuelCalc</string>
+    <string name="portfolio_fuelcalc_description">Trip fuel cost calculator with history (Kotlin, Jetpack Compose)</string>
+    <string name="portfolio_card_title">Business Card</string>
+    <string name="portfolio_card_description">This app: CV, portfolio, contact form and two languages</string>
+    <string name="portfolio_add">Add portfolio item</string>
+    <string name="portfolio_added">Portfolio item saved</string>
+    <string name="image_loading">Loading image…</string>
+    <string name="image_error">Image could not be loaded</string>
+    <string name="image_retry">Try again</string>
+
+    <!-- Add dialogs -->
+    <string name="field_section">Section</string>
+    <string name="field_title">Title</string>
+    <string name="field_details">Details</string>
+    <string name="field_description">Description</string>
+    <string name="field_image_url">Image URL (https://…)</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="error_required">Required field</string>
+    <string name="error_url">Link must start with https://</string>
+    <string name="deleted">Entry deleted</string>
+    <string name="user_entry_label">Added by you</string>
+
+    <!-- Contact -->
+    <string name="contact_intro">Have a question? Write it here and it will be sent to me by email.</string>
+    <string name="contact_name">Your name</string>
+    <string name="contact_email">Your email</string>
+    <string name="contact_phone">Phone (optional)</string>
+    <string name="contact_question">Question</string>
+    <string name="contact_send">Send</string>
+    <string name="contact_subject">Question from %1$s</string>
+    <string name="contact_error_email">Enter a valid email address</string>
+    <string name="contact_check_fields">Please check the form</string>
+    <string name="contact_no_email_app">No email app found on this device</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.fuelcalc.ui.theme
+package lt.vilniustech.gsk.mkdf_23_2.povilionis.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -98,7 +98,7 @@ private val AppShapes = Shapes(
 )
 
 @Composable
-fun FuelCalcTheme(
+fun BusinessCardTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

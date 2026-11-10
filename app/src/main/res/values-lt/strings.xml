@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">Vizitinė kortelė</string>
+
+    <!-- Navigacija -->
+    <string name="nav_home">Kortelė</string>
+    <string name="nav_cv">CV</string>
+    <string name="nav_portfolio">Portfolio</string>
+    <string name="nav_contact">Kontaktai</string>
+
+    <!-- Kalba -->
+    <string name="menu_language">Kalba</string>
+    <string name="language_lt">Lietuvių</string>
+    <string name="language_en">English</string>
+
+    <!-- Pagrindinis -->
+    <string name="home_role">Mobiliųjų programėlių kūrėjas (studentas)</string>
+    <string name="home_group">Grupė: %1$s</string>
+    <string name="home_photo_description">Profilio nuotrauka</string>
+    <string name="home_take_photo">Nufotografuoti iš naujo</string>
+    <string name="home_show_cv">Rodyti CV</string>
+    <string name="home_show_portfolio">Rodyti portfolio</string>
+    <string name="home_contact_me">Susisiekti su manimi</string>
+    <string name="home_send_email">Siųsti laišką adresu %1$s</string>
+    <string name="camera_not_available">Šiame įrenginyje nerasta kameros programėlės</string>
+    <string name="photo_updated">Nuotrauka atnaujinta</string>
+
+    <!-- CV -->
+    <string name="cv_section_education">Išsilavinimas</string>
+    <string name="cv_section_experience">Patirtis</string>
+    <string name="cv_section_skills">Įgūdžiai</string>
+    <string name="cv_section_other">Kita</string>
+    <string name="cv_education_title">VILNIUS TECH</string>
+    <string name="cv_education_details">Vilniaus Gedimino technikos universitetas, grupė MKDF23/2 (studijuoju)</string>
+    <string name="cv_skills_title">Mobiliųjų programėlių kūrimas</string>
+    <string name="cv_skills_details">Kotlin, Jetpack Compose, Material 3, Room, Git</string>
+    <string name="cv_languages_title">Kalbos</string>
+    <string name="cv_languages_details">Lietuvių (gimtoji), anglų</string>
+    <string name="cv_add">Pridėti CV įrašą</string>
+    <string name="cv_added">CV įrašas išsaugotas</string>
+
+    <!-- Portfolio -->
+    <string name="portfolio_fuelcalc_title">FuelCalc</string>
+    <string name="portfolio_fuelcalc_description">Kelionės kuro kainos skaičiuoklė su istorija (Kotlin, Jetpack Compose)</string>
+    <string name="portfolio_card_title">Vizitinė kortelė</string>
+    <string name="portfolio_card_description">Ši programėlė: CV, portfolio, kontaktų forma ir dvi kalbos</string>
+    <string name="portfolio_add">Pridėti portfolio darbą</string>
+    <string name="portfolio_added">Portfolio darbas išsaugotas</string>
+    <string name="image_loading">Kraunamas vaizdas…</string>
+    <string name="image_error">Nepavyko užkrauti vaizdo</string>
+    <string name="image_retry">Bandyti dar kartą</string>
+
+    <!-- Pridėjimo langai -->
+    <string name="field_section">Skyrius</string>
+    <string name="field_title">Pavadinimas</string>
+    <string name="field_details">Aprašymas</string>
+    <string name="field_description">Aprašymas</string>
+    <string name="field_image_url">Vaizdo nuoroda (https://…)</string>
+    <string name="action_save">Išsaugoti</string>
+    <string name="action_cancel">Atšaukti</string>
+    <string name="action_delete">Ištrinti</string>
+    <string name="error_required">Privalomas laukas</string>
+    <string name="error_url">Nuoroda turi prasidėti https://</string>
+    <string name="deleted">Įrašas ištrintas</string>
+    <string name="user_entry_label">Pridėta jūsų</string>
+
+    <!-- Kontaktai -->
+    <string name="contact_intro">Turite klausimą? Parašykite jį čia – jis bus išsiųstas man el. paštu.</string>
+    <string name="contact_name">Jūsų vardas</string>
+    <string name="contact_email">Jūsų el. paštas</string>
+    <string name="contact_phone">Telefonas (nebūtina)</string>
+    <string name="contact_question">Klausimas</string>
+    <string name="contact_send">Siųsti</string>
+    <string name="contact_subject">Klausimas nuo %1$s</string>
+    <string name="contact_error_email">Įveskite teisingą el. pašto adresą</string>
+    <string name="contact_check_fields">Patikrinkite formą</string>
+    <string name="contact_no_email_app">Šiame įrenginyje nerasta el. pašto programėlės</string>
+</resources>

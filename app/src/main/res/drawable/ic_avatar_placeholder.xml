@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rodoma, kol vartotojas nenufotografavo savo nuotraukos -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <path android:fillColor="#DCE4FF" android:pathData="M0,0h120v120h-120z" />
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M60,48 m-20,0 a20,20 0 1 0 40,0 a20,20 0 1 0 -40,0 M24,112 c0,-22 16,-34 36,-34 c20,0 36,12 36,34 z" />
+</vector>
