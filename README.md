@@ -1,87 +1,96 @@
-# FuelCalc – kelionės kuro kainos skaičiuoklė
+# Vizitinė kortelė – Android programėlė
 
-**Autorius:** Arnas Povilionis
-**Grupė:** [GRUPĖ]
+**Autorius:** Arnas Povilionis, grupė MKDF23/2
+**Paketas:** `lt.vilniustech.gsk.mkdf_23_2.povilionis`
 
-Android programėlė (Kotlin + Jetpack Compose, Material 3), kuri apskaičiuoja,
-kiek kuro reikės kelionei ir kiek ji kainuos.
+Programėlė – mano vizitinė kortelė: nuotrauka, kontaktai, CV, portfolio ir forma „Susisiekti su manimi“.
+Kotlin + Jetpack Compose + Material 3.
 
-> ⚠️ Prieš atsiskaitydami įrašykite savo grupę faile
-> `app/src/main/java/com/example/fuelcalc/FuelCalculator.kt` (eilutė
-> `const val AUTHOR_GROUP = "[GRUPĖ]"`). Ji automatiškai atsiras ir meniu „Autorius“, ir puslapyje „Apie“.
+> ⚠️ Prieš atsiskaitymą ir publikavimą įrašykite savo el. pašto adresą faile
+> `app/src/main/java/lt/vilniustech/gsk/mkdf_23_2/povilionis/Profile.kt`
+> (eilutė `const val OWNER_EMAIL = "your.email@example.com"`).
 
 ## Kaip paleisti
 
-1. Išarchyvuokite `FuelCalc.zip`.
-2. Android Studio (Ladybug 2024.2 ar naujesnė): **File → Open** → pasirinkite aplanką `FuelCalc`.
-3. Palaukite, kol baigsis „Gradle Sync“ (pirmą kartą atsisiunčiamos bibliotekos, reikia interneto).
-4. Pasirinkite emuliatorių arba prijunkite telefoną (Android 8.0 / API 26 ar naujesnį) ir spauskite **Run ▶**.
-
-### Testų paleidimas
-
-- Android Studio: atidarykite `app/src/test/java/com/example/fuelcalc/FuelCalculatorTest.kt`
-  ir spauskite žalią ▶ prie klasės pavadinimo.
-- Arba terminale: `./gradlew test` (Windows: `gradlew.bat test`).
-
-## Kaip naudotis
-
-1. **Skaičiuoklė** – įveskite atstumą (km), kuro sąnaudas (l/100 km) ir kuro kainą (€/l)
-   (galima rašyti ir su kableliu, pvz. `6,5`). Pasirinkite kuro tipą, ar kelionė pirmyn ir atgal,
-   ir slankikliu – keleivių skaičių (1–5). Paspauskite **Apskaičiuoti**.
-   Rezultatas (litrai, kaina, kaina vienam žmogui) parodomas su animacija, o apačioje
-   iššoka Snackbar pranešimas. Neteisingi laukai pažymimi raudonai su klaidos tekstu.
-   **Išvalyti** – išvalo visus laukus.
-2. **Istorija** – visi atlikti skaičiavimai (naujausi viršuje). Šiukšliadėžės mygtuku įrašą galima ištrinti.
-   Apatinėje juostoje prie „Istorija“ rodomas įrašų skaičius.
-3. **Apie** – autoriaus informacija ir programėlės aprašymas.
-4. Viršutinėje juostoje (TopAppBar) – trijų taškų meniu → **Autorius** atidaro langą su autoriaus vardu, pavarde ir grupe.
-
-## Formulės
-
-- Atstumas = įvestas atstumas × 2, jei įjungta „Kelionė pirmyn ir atgal“
-- Kuras (l) = atstumas × sąnaudos / 100
-- Kaina (€) = kuras × kuro kaina
-- Kaina vienam žmogui = kaina / keleivių skaičius
+1. Android Studio → **File → Open** → projekto aplankas.
+2. Palaukite „Gradle Sync“.
+3. Pasirinkite emuliatorių ar telefoną (Android 8.0 / API 26 ar naujesnį) ir spauskite **Run ▶**.
+4. Testai: `app/src/test/.../ContactFormTest.kt` → žalias ▶ (arba `gradlew test`).
 
 ## Reikalavimų atitikimas
 
 | Reikalavimas | Kur realizuota |
 |---|---|
-| Įvesties apdorojimas, skaičiavimai, tikrinimas | `FuelCalculator.kt`, `FuelViewModel.kt` |
-| TextField, Button, OutlinedButton, Card, RadioButton, Switch, Slider, IconButton, Icon, HorizontalDivider, Badge | `CalculatorScreen.kt`, `HistoryScreen.kt`, `AboutScreen.kt` |
-| Snackbar | `FuelCalcApp.kt` (`SnackbarHost`), kviečiamas skaičiuojant ir trinant |
-| 3 puslapiai + Bottom Navigation (NavigationBar + NavHost) | `FuelCalcApp.kt` |
-| Istorija su LazyColumn ir trynimu | `HistoryScreen.kt` |
-| TopAppBar (CenterAlignedTopAppBar) su trijų taškų meniu (DropdownMenu) ir AlertDialog „Autorius“ | `FuelCalcApp.kt` |
-| Autoriaus informacija „Apie“ puslapyje | `AboutScreen.kt` |
-| Animacija | `AnimatedVisibility` rezultato kortelei (`CalculatorScreen.kt`), `animateItem()` istorijos sąraše |
-| Material 3 tema (spalvos, tipografija, formos, šviesus/tamsus režimas) | `ui/theme/Theme.kt` |
-| Kintami ekrano dydžiai | `MainActivity.kt` (`calculateWindowSizeClass`) → `CalculatorScreen.kt`: telefone elementai vienas po kito, plačiame ekrane (planšetė / horizontaliai) – įvestis kairėje, rezultatas dešinėje |
-| Prieinamumas | `contentDescription` ikonoms, `selectable(role = Role.RadioButton)` kuro tipo pasirinkimui |
-| Unit testai | `app/src/test/.../FuelCalculatorTest.kt` |
+| Kontaktai (el. paštas), nuotrauka | `ui/screens/HomeScreen.kt`, duomenys – `Profile.kt` |
+| Mygtukai „Rodyti CV“, „Rodyti portfolio“ | `HomeScreen.kt` → `CvScreen.kt`, `PortfolioScreen.kt` |
+| **Data Storage**: nauji CV / portfolio įrašai išlieka paleidus iš naujo | Room duomenų bazė: `data/Entities.kt`, `data/AppDatabase.kt`; `CardViewModel.kt` |
+| **Kontaktų forma** – laiškas per kitą programėlę (Intent) | `ui/screens/ContactScreen.kt` (`Intent.ACTION_SENDTO`, `mailto:`), tikrinimas – `ContactForm.kt` |
+| **Lokalizacija** LT / EN, tekstai atskiruose failuose | `res/values/strings.xml` (EN), `res/values-lt/strings.xml` (LT); perjungiklis „LT / EN“ viršutinėje juostoje (`BusinessCardApp.kt`, `AppCompatDelegate.setApplicationLocales`) |
+| **Skirtingi ekranai**, vertikaliai ir horizontaliai | `MainActivity.kt` (`calculateWindowSizeClass`) → siaurame ekrane apatinė navigacija, plačiame – šoninė (`NavigationRail`); kortelė plačiame ekrane – dviem stulpeliais; portfolio – `LazyVerticalGrid(GridCells.Adaptive)`; turinio plotis ribojamas `widthIn(max)` |
+| **(+1) Kamera** – nauja nuotrauka | `HomeScreen.kt` (`ActivityResultContracts.TakePicture`), `ProfilePhoto.kt`, `FileProvider` (`AndroidManifest.xml`, `res/xml/file_paths.xml`) |
+| **(+1) Vaizdai iš interneto** su Coil, pakaitiniai vaizdai ir „Bandyti dar kartą“ | `PortfolioScreen.kt` (`SubcomposeAsyncImage`: `loading` – pakaitinis vaizdas + indikatorius, `error` – klaidos vaizdas + mygtukas); vaizdai talpinami aplanke `portfolio/` (viešai per GitHub) |
+| Paketo pavadinimas `lt.vilniustech.gsk.<grupė>.<pavadinimas>` | `app/build.gradle.kts` |
+| Unit testai | `app/src/test/.../ContactFormTest.kt` |
 
-## Kodėl testuojamas būtent šis atvejis
+## Kur saugomi duomenys
 
-Svarbiausia programėlės dalis – kainos skaičiavimas, todėl testuojama `FuelCalculator` logika
-(ji atskirta nuo UI, todėl testai greiti ir nereikia emuliatoriaus):
+- **CV ir portfolio įrašai** – Room (SQLite) duomenų bazė `business_card.db` telefono atmintyje.
+  Room pasirinkta, nes įrašai yra sąrašas su keliais laukais – duomenų bazei tai natūralu,
+  o DataStore labiau tinka pavieniams nustatymams.
+- **Nuotrauka** – failas `filesDir/photos/profile.jpg`.
+- **Pasirinkta kalba** – ją išsaugo Android (`AppCompatDelegate`; senesnėse versijose – `autoStoreLocales`).
+- Įmontuoti (pradiniai) CV ir portfolio įrašai yra `strings.xml`, todėl rodomi pasirinkta kalba.
 
-1. **`calculate_oneWay_returnsCorrectLitersAndCost`** – patikrina pagrindinę formulę
-   (100 km × 6,5 l/100 km = 6,5 l; 6,5 l × 1,60 € = 10,40 €). Jei ji klaidinga – visa programėlė neteisinga.
+## Testai
+
+`ContactFormTest` tikrina:
+1. teisingai užpildyta forma priimama;
+2. tuščias vardas, blogas el. paštas ir tuščias klausimas pažymimi kaip klaidos;
+3. laiško tekste yra klausimas ir klausiančiojo kontaktai;
+4. portfolio vaizdo nuoroda priimama tik `https://` (Android blokuoja `http`).
+
+## Publikavimas Google Play (uždaras testavimas)
+
+1. **El. paštas.** Įrašykite savo el. paštą `Profile.kt` (žr. aukščiau).
+2. **Privatumo politika.** Naudokite nuorodą į `PRIVACY.md`, kai šis failas bus `master` šakoje:
+   `https://github.com/ArnasPovilionis/FuelCalc/blob/master/PRIVACY.md`
+   (repozitorija turi būti vieša; atidarykite nuorodą naršyklėje ir įsitikinkite, kad veikia).
+3. **Pasirašytas AAB.** Android Studio → **Build → Generate Signed App Bundle / APK → Android App Bundle**
+   → **Create new…** (sukurkite raktų saugyklą `.jks`, **išsaugokite ją ir slaptažodžius** – be jų
+   atnaujinti programėlės nebegalėsite; į GitHub jos **nekelkite**) → **release** → gausite
+   `app/release/app-release.aab`.
+4. **Play Console** (katedros paskyra arba savo) → **Create app**: pavadinimas „Vizitinė kortelė“,
+   kalba – lietuvių, „App“, „Free“.
+5. **App content**: Privacy policy (2 punkto nuoroda), App access – „All functionality available
+   without special access“, Ads – „No“, Content rating anketa, Target audience – 18+,
+   Data safety – „No data collected / shared“ (duomenys lieka telefone).
+6. **Store listing**: trumpas ir pilnas aprašymas, ikona `store/icon_512.png`,
+   feature graphic `store/feature_graphic_1024x500.png`, bent 2 telefono ekrano nuotraukos
+   (`store/screenshots/`).
+7. **Testing → Closed testing** → sukurkite leidimą (release), įkelkite `app-release.aab`,
+   pridėkite testuotojų sąrašą → **Send for review**.
+8. Kai Google patvirtins – nukopijuokite testavimo nuorodą, padarykite ekrano nuotrauką ir įkelkite į Moodle.
 
 ## Projekto struktūra
 
 ```
-app/src/main/java/com/example/fuelcalc/
-├── MainActivity.kt        – programos įėjimo taškas, ekrano dydžio klasė
-├── FuelCalcApp.kt         – Scaffold, TopAppBar, meniu, AlertDialog, Bottom Navigation, NavHost
-├── CalculatorScreen.kt    – „Skaičiuoklė“ puslapis
-├── HistoryScreen.kt       – „Istorija“ puslapis (LazyColumn)
-├── AboutScreen.kt         – „Apie“ puslapis
-├── FuelCalculator.kt      – skaičiavimo ir tikrinimo logika, autoriaus duomenys
-├── FuelViewModel.kt       – ekrano būsena ir istorija
-└── ui/theme/Theme.kt      – Material 3 spalvos, tipografija ir formos
-app/src/test/java/com/example/fuelcalc/FuelCalculatorTest.kt – unit testai
+app/src/main/java/lt/vilniustech/gsk/mkdf_23_2/povilionis/
+├── MainActivity.kt        – paleidimas, ekrano dydžio klasė
+├── BusinessCardApp.kt     – Scaffold, navigacija (apatinė / šoninė), kalbos perjungiklis
+├── CardViewModel.kt       – duomenys ekranams (Room įrašai, nuotrauka)
+├── Profile.kt             – vardas, grupė, el. paštas, įmontuoti CV ir portfolio įrašai
+├── ContactForm.kt         – kontaktų formos tikrinimas ir laiško tekstas
+├── ProfilePhoto.kt        – nuotraukos failas ir FileProvider
+├── data/                  – Room: įrašai, DAO, duomenų bazė
+└── ui/
+    ├── screens/           – HomeScreen, CvScreen, PortfolioScreen, ContactScreen, Dialogs
+    └── theme/Theme.kt     – Material 3 spalvos, šriftai, formos
+app/src/main/res/values/strings.xml     – angliški tekstai
+app/src/main/res/values-lt/strings.xml  – lietuviški tekstai
+portfolio/                              – portfolio vaizdai (kraunami iš interneto)
+store/                                  – Google Play grafika
+PRIVACY.md                              – privatumo politika
 ```
 
-Naudojama: Android Gradle Plugin 8.7.3, Gradle 8.11.1, Kotlin 2.0.21, Compose BOM 2024.12.01,
-Navigation Compose 2.8.5, minSdk 26, targetSdk 35.
+Naudojama: Android Gradle Plugin 8.13.2, Gradle 8.13, Kotlin 2.0.21, Compose BOM 2024.12.01,
+Room 2.6.1, Coil 3.0.4, minSdk 26, targetSdk 36.

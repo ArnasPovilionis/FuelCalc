@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pakaitinis portfolio vaizdas (kol kraunama arba kai nuoroda tuščia) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="100dp"
+    android:viewportWidth="160"
+    android:viewportHeight="100">
+    <path android:fillColor="#E3E7F1" android:pathData="M0,0h160v100h-160z" />
+    <path android:fillColor="#8A91A5" android:pathData="M40,72 l24,-28 l18,20 l12,-12 l26,20 z" />
+    <path android:fillColor="#8A91A5" android:pathData="M104,32 m-8,0 a8,8 0 1 0 16,0 a8,8 0 1 0 -16,0" />
+</vector>

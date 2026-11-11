@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Rodoma, kai vaizdo nepavyko užkrauti (pvz. nėra interneto) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="100dp"
+    android:viewportWidth="160"
+    android:viewportHeight="100">
+    <path android:fillColor="#FDE2E2" android:pathData="M0,0h160v100h-160z" />
+    <path
+        android:fillColor="#B42318"
+        android:pathData="M80,26 l26,46 h-52 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M77.5,42 h5 v16 h-5 z M77.5,62 h5 v5 h-5 z" />
+</vector>
